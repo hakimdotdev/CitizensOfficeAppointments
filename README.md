@@ -1,10 +1,12 @@
 # CitizensOfficeAppointments
 
-.NET Application to check the citizens office in Darmstadt for appointments.
+.NET Application with Docker support to check the citizens office in Darmstadt for appointments.
 
 ## Notes 
 
 - Supposed to be ran as Docker container
+- Checks if there are appointments for the set concern
+- Sends out appointments via E-Mail
 - Should, in perspective reflect all concerns
 
 ## Docker
