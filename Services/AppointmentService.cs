@@ -31,10 +31,10 @@ namespace CitizensOfficeAppointments.Services
 		{
 			_logger.LogInformation("[{dt}] Starting to fetch appointments for {cat} => {con}", DateTime.UtcNow.ToLongTimeString(), category, concern);
 
-			await DoWork(stoppingToken);
+			Timer _timer = new(DoWork, null, TimeSpan.Zero, TimeSpan.FromMinutes(2));
 		}
 
-		private async Task DoWork(CancellationToken stoppingToken)
+		private async void DoWork(object? state)
 		{
 			if (!String.IsNullOrWhiteSpace(category))
 			{
