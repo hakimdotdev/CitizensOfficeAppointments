@@ -22,7 +22,18 @@ All configuration is provided by environment variables.
 | CONCERN              | Concern of the appointment														  | Personalausweis						 |
 | EMAILHOST            | Smtp url of the E-Mail host													  | smtp.strato.de		                 |
 | EMAILUSER			   | E-Mail login user or address									                  | firstname@lastname.de                |
-| EMAILPASSWORD		   | E-Mail login password															  | mys3cur3p4ss						 |
+| EMAILUSER		   | E-Mail login password															  | mys3cur3p4ss						 |
 | EMAIL				   | Recipient																		  | firstname@lastname.de                |
 
-### Getting started
+### Getting Started
+
+```
+docker run --name CitizensOfficeAppointments \
+  -e CATEGORY=x \
+  -e CONCERN=x \
+  -e EMAILHOST=x \
+  -e EMAILUSER=x \
+  -e EMAILPASSWORD=x \ 
+  -e EMAIL=x \
+  hakimdotnet/citizensofficeappointments:latest
+```
