@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using _64CitizenOfficeApp.NET.Helpers;
 using CitizensOfficeAppointments.Helpers;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
 
 namespace CitizensOfficeAppointments.Services
 {
@@ -31,7 +34,7 @@ namespace CitizensOfficeAppointments.Services
 		{
 			_logger.LogInformation("[{dt}] Starting to fetch appointments for {cat} => {con}", DateTime.UtcNow.ToLongTimeString(), category, concern);
 
-			Timer _timer = new(DoWork, null, TimeSpan.Zero, TimeSpan.FromMinutes(2));
+			Timer _timer = new(DoWork, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
 		}
 
 		private async void DoWork(object? state)
@@ -42,43 +45,58 @@ namespace CitizensOfficeAppointments.Services
 				{
 					ChromeOptions chromeOptions = new ChromeOptions();
 					chromeOptions.AddArgument("port=39999");
+					chromeOptions.AddArgument("--start-maximized");
 					IWebDriver driver = new ChromeDriver(chromeOptions);
+					Actions actions = new(driver);
 
-					_logger.LogInformation("[{dt}] Fetching appointments" , DateTime.UtcNow.ToLongTimeString());
+					_logger.LogInformation("[{dt}] Fetching appointments" , DateTime.Now.ToLongTimeString());
 
 					driver.Navigate().GoToUrl("https://tevis.ekom21.de/stdar/select2?md=4");
+					Thread.Sleep(1000);
 					// Kategorie-Akkordion
-					driver.FindElement(By.XPath($"//*[contains(text(), '{category}')]")).Click();
+					driver.FindElement(By.Id("cookie_msg_btn_yes")).Click();
+					var accordion = driver.FindElement(By.XPath($"//*[contains(text(), '{category}')]"));
+					Thread.Sleep(1000);
+					actions.MoveToElement(accordion).Click().Perform();
+					Thread.Sleep(1000);
+
 					//TODO: below more dynamic for all use cases
 					// Anzahl des zu buchenden Anliegen innerhalb der Kategorie erhöhen
-					driver.FindElement(By.CssSelector($"[title='Erhöhen der Anzahl des Anliegens Antrag {concern}']")).Click();
+					var plusButton = driver.FindElement(By.CssSelector($"[title='Erhöhen der Anzahl des Anliegens Antrag {concern}']"));
+					actions.MoveToElement(plusButton).Click().Perform();
+					Thread.Sleep(1000);
+
 					// Weiter
-					driver.FindElements(By.Id("WeiterButton")).FirstOrDefault()!.Click();
+					var weiterButton = driver.FindElements(By.Id("WeiterButton")).FirstOrDefault()!;
+					actions.MoveToElement(weiterButton).Click().Perform();
+					Thread.Sleep(1000);
+
 					// Ok
-					driver.FindElements(By.Id("OKButton")).FirstOrDefault()!.Click();
+					var okButton = driver.FindElements(By.Id("OKButton")).FirstOrDefault()!;
+					actions.MoveToElement(okButton).Click().Perform();
+					Thread.Sleep(1000);
+
 					// Standort auswählen
-					driver.FindElement(By.Name("select_location")).Click();
+					var locationButton = driver.FindElement(By.Name("select_location"));
+					actions.MoveToElement(locationButton).Click().Perform();
+
+
 					// Body auslesen
 					IWebElement body = driver.FindElement(By.TagName("body"));
-					appointments = !body.Text.Contains("Kein freier Termin verfügbar");
-					if (appointments)
+					if (!body.Text.Contains("Kein freier Termin verfügbar"))
 					{
-						_logger.LogInformation("[{dt}] Starting to fetch appointments for {cat} => {con}", DateTime.UtcNow.ToLongTimeString(), category, concern);
-						// scrape termine
-						List<DateTime> dates = new List<DateTime>()
-						{
-							DateTime.UtcNow //...
-						};
-						Smtp.SendMail(dates.ToString());
+						_logger.LogInformation("[{dt}] Found appointments for {cat} => {con}.", DateTime.Now.ToLongTimeString(), category, concern);
+						Smtp.SendMail(body.Text);
 						return;
 					}
-					_logger.LogInformation("[{dt}] There is currently no appointments stated on the website", DateTime.UtcNow.ToLongTimeString());
+					_logger.LogInformation("[{dt}] There is currently no appointments stated on the website", DateTime.Now.ToLongTimeString());
+					driver.Quit();
 					return;
 				}
-				_logger.LogInformation("[{dt}] Concern wasn't provided properly provided.", DateTime.UtcNow.ToLongTimeString());
+				_logger.LogInformation("[{dt}] Concern wasn't provided properly provided.", DateTime.Now.ToLongTimeString());
 				return;
 			}
-			_logger.LogInformation("[{dt}] Category wasn't provided properly.", DateTime.UtcNow.ToLongTimeString());
+			_logger.LogInformation("[{dt}] Category wasn't provided properly.", DateTime.Now.ToLongTimeString());
 			return;
 
 		}
@@ -86,7 +104,7 @@ namespace CitizensOfficeAppointments.Services
 		public override async Task StopAsync(CancellationToken stoppingToken)
 		{
 			_logger.LogInformation(
-				"Consume Scoped Service Hosted Service is stopping.");
+				"[{dt}] AppointmentService stopping.", DateTime.Now.ToLongDateString);
 
 			await base.StopAsync(stoppingToken);
 		}
