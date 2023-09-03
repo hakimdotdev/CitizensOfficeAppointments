@@ -40,7 +40,9 @@ namespace CitizensOfficeAppointments.Services
 			{
 				if (!String.IsNullOrWhiteSpace(concern))
 				{
-					IWebDriver driver = new ChromeDriver();
+					ChromeOptions chromeOptions = new ChromeOptions();
+					chromeOptions.AddArgument("port=39999");
+					IWebDriver driver = new ChromeDriver(chromeOptions);
 
 					_logger.LogInformation("[{dt}] Fetching appointments" , DateTime.UtcNow.ToLongTimeString());
 

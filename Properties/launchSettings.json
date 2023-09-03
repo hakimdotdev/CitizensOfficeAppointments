@@ -1,14 +1,15 @@
 {
-  "profiles": {
-    "CitizensOfficeAppointments": {
-      "commandName": "Project"
-    },
-    "WSL": {
-      "commandName": "WSL2",
-      "distributionName": ""
-    },
-    "Docker": {
-      "commandName": "Docker"
+    "profiles": {
+        "CitizensOfficeAppointments": {
+            "commandName": "Project"
+        },
+        "applicationUrl": "http://localhost:39999/",
+        "WSL": {
+            "commandName": "WSL2",
+            "distributionName": "Ubuntu22.04"
+        },
+        "Docker": {
+            "commandName": "Docker"
+        }
     }
-  }
 }
