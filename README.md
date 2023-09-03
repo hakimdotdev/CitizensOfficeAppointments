@@ -28,12 +28,4 @@ All configuration is provided by environment variables.
 ### Getting Started
 
 ```
-docker run --name CitizensOfficeAppointments \
-  -e CATEGORY=x \
-  -e CONCERN=x \
-  -e EMAILHOST=x \
-  -e EMAILUSER=x \
-  -e EMAILPASSWORD=x \ 
-  -e EMAIL=x \
-  hakimdotnet/citizensofficeappointments:latest
-```
+ docker run -p 39999:39999 -e CATEGORY=x -e CONCERN=x -e EMAILHOST=x -e EMAILUSER=x -e EMAILPASSWORD=x -e EMAIL=x hakimdotnet/citizensofficeappointments:latest
