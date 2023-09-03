@@ -3,10 +3,9 @@
         "CitizensOfficeAppointments": {
             "commandName": "Project"
         },
-        "applicationUrl": "http://localhost:39999/",
         "WSL": {
             "commandName": "WSL2",
-            "distributionName": "Ubuntu22.04"
+            "distributionName": ""
         },
         "Docker": {
             "commandName": "Docker"

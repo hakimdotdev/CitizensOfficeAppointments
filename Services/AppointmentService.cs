@@ -46,6 +46,11 @@ namespace CitizensOfficeAppointments.Services
 					ChromeOptions chromeOptions = new ChromeOptions();
 					chromeOptions.AddArgument("port=39999");
 					chromeOptions.AddArgument("--start-maximized");
+					chromeOptions.AddArgument("disable-infobars");
+					chromeOptions.AddArgument("--disable-extensions");
+					chromeOptions.AddArgument("--disable-dev-shm-usage");
+					chromeOptions.AddArgument("--no-sandbox");
+					chromeOptions.AddArgument("--headless");
 					IWebDriver driver = new ChromeDriver(chromeOptions);
 					Actions actions = new(driver);
 
