@@ -21,6 +21,7 @@ namespace CitizensOfficeAppointments.Services
 		private string category;
 		private string concern;
 		private bool appointments = false;
+		private Timer ?_timer;
 
 		public AppointmentService(ILogger<AppointmentService> logger)
 		{
@@ -34,7 +35,7 @@ namespace CitizensOfficeAppointments.Services
 		{
 			_logger.LogInformation("[{dt}] Starting to fetch appointments for {cat} => {con}", DateTime.UtcNow.ToLongTimeString(), category, concern);
 
-			Timer _timer = new(DoWork, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
+			_timer = new(DoWork, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
 		}
 
 		private async void DoWork(object? state)
@@ -110,8 +111,8 @@ namespace CitizensOfficeAppointments.Services
 		{
 			_logger.LogInformation(
 				"[{dt}] AppointmentService stopping.", DateTime.Now.ToLongDateString);
-
-			await base.StopAsync(stoppingToken);
+			_timer?.Change(Timeout.Infinite, 0);
+			_timer?.Dispose(); 
 		}
 	}
 }
