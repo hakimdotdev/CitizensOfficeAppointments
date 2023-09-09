@@ -1,5 +1,5 @@
 # CitizensOfficeAppointments
-[![Docker Image CI](https://github.com/hakimdotdev/CitizensOfficeAppointments/actions/workflows/docker-image.yml/badge.svg)](https://github.com/hakimdotdev/CitizensOfficeAppointments/actions/workflows/docker-image.yml)
+[![.NET](https://github.com/hakimdotdev/CitizensOfficeAppointments/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hakimdotdev/CitizensOfficeAppointments/actions/workflows/dotnet.yml)[![Docker](https://github.com/hakimdotdev/CitizensOfficeAppointments/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/hakimdotdev/CitizensOfficeAppointments/actions/workflows/docker-publish.yml)
 
 .NET Application with Docker support to check the citizens office in Darmstadt for appointments.
 
